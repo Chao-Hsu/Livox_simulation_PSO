@@ -1,0 +1,60 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" GroupingSetting="Access" MembersFormat="FullSignature">
+  <Class Name="Cross_Section">
+    <Position X="7.5" Y="0.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAEAAAAAIAAAAAAAIAAAAgAAA=</HashCode>
+      <FileName>cross_section.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Cylinder">
+    <Position X="8.75" Y="3.25" Width="3.5" />
+    <TypeIdentifier>
+      <HashCode>IAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAQBAAAAAAA=</HashCode>
+      <FileName>cross_section.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Arch">
+    <Position X="4.75" Y="3.25" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAAQAAAAAAAAAAAAAAEAAAAAAAAAAAAwBQARgAAAAaA=</HashCode>
+      <FileName>cross_section.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Livox">
+    <Position X="6.75" Y="7.5" Width="3.75" />
+    <TypeIdentifier>
+      <HashCode>AgRAAAAIAAAAAIAAABQAAADoAAgAAEAAIAQAAAgAAAg=</HashCode>
+      <FileName>Livox.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Mid">
+    <Position X="9.25" Y="13.75" Width="3.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAEAAAAAAAIAAAAAAAAAAAAIAAAAA=</HashCode>
+      <FileName>Livox.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Mid70">
+    <Position X="9.25" Y="16.5" Width="3.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAgAAAAAAAA=</HashCode>
+      <FileName>Livox.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Horizon">
+    <Position X="4.5" Y="13.75" Width="4" />
+    <TypeIdentifier>
+      <HashCode>AQEAAAAAAQQAAAAEAAAAAAAgAAAEAAAAQAASAEABAAA=</HashCode>
+      <FileName>Livox.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Enum Name="cross_section">
+    <Position X="13.75" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAQAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAA=</HashCode>
+      <FileName>cross_section.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Microsoft JhengHei UI" Size="9" />
+</ClassDiagram>
