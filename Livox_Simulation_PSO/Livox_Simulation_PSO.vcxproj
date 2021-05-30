@@ -146,11 +146,13 @@
   <ItemGroup>
     <ClInclude Include="cross_section.h" />
     <ClInclude Include="Livox.h" />
+    <ClInclude Include="PSO.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="cross_section.cpp" />
     <ClCompile Include="Livox.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="PSO.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />

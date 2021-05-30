@@ -1,11 +1,13 @@
 #include "Livox.h"
 #include "cross_section.h"
 
-constexpr auto SCANNING_TIME = 10U;
-int nMid70 = 0;
-int nHorizon = 0;
 int THREADS = 12;
 char flag_cross_section = choose_cylinder;
+
+constexpr auto SCANNING_TIME = 10U;
+
+int nMid70 = 0;
+int nHorizon = 0;
 
 Livox::Livox()
 {

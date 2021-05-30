@@ -4,7 +4,6 @@
 
 extern int nMid70;
 extern int nHorizon;
-extern int THREADS;
 
 class Livox :public Cylinder, public Arch
 {

@@ -24,6 +24,7 @@
 
 #include <omp.h>
 
+extern int THREADS;
 extern char flag_cross_section;
 extern pcl::PointCloud<pcl::PointXYZ> cloud;
 
