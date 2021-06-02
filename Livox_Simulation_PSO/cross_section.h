@@ -42,7 +42,7 @@ class Cross_Section
 public:
 	Cross_Section();
 	~Cross_Section() { delete cube; }
-	static std::vector<unsigned>::const_iterator check_continue(std::vector<unsigned>::const_iterator i);
+	static std::vector<unsigned>::iterator check_continue(std::vector<unsigned>::iterator i);
 
 protected:
 	constexpr static float eps = 1e-5f;

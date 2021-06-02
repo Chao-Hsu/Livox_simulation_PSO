@@ -4,11 +4,10 @@ pcl::PointCloud<pcl::PointXYZL> cloud;
 pcl::PointCloud<pcl::PointXYZL> cloud_cube;
 
 Cross_Section::Cross_Section() {}
-std::vector<unsigned>::const_iterator Cross_Section::check_continue(std::vector<unsigned>::const_iterator i)
+std::vector<unsigned>::iterator Cross_Section::check_continue(std::vector<unsigned>::iterator i)
 {
-	if (*(i + 1) - *i == 1) {
-		return check_continue(i + 1);
-	}
+	if (*(i + 1) - *i != 1) return i;
+	else return check_continue(i + 1);
 }
 unsigned Cross_Section::cube_x = 0U;
 unsigned Cross_Section::cube_y = 0U;
@@ -71,9 +70,9 @@ float Cylinder::statistics(bool print)
 	unsigned cloud_size = cloud.size();
 	if (print)
 	{
-		std::cout << "------------------------------------------------------------------------------\n" 
+		std::cout << "------------------------------------------------------------------------------\n"
 			<< "Number of points = " << cloud_size << endl;
-		std::cout << "Number of cubes = " << cube_x << " * " << cube_y << " * " << cube_z << " = " << nCube 
+		std::cout << "Number of cubes = " << cube_x << " * " << cube_y << " * " << cube_z << " = " << nCube
 			<< "\nSegmentation: " << std::fixed << setprecision(2) << end - start << "m, precision: " << precision << "m\n";
 	}
 
@@ -158,7 +157,7 @@ float Cylinder::statistics(bool print)
 		std::cout << "------------------------------------------------------------------------------\nStatistics\n";
 		std::cout << "\nSum: " << sPts << "(" << std::fixed << setprecision(2) << (float)sPts / cloud_size * 100.0f
 			<< "%), " << sPts / (r * (2 + EIGEN_PI) * seg * 10000.0f) << "pts/cm^2\n"
-			<< "Cubes: " << sCube << "(Zero: " << sCube - sN << "(" << (float)(sCube - sN) / (float)sCube * 100.0f << "%), N: " 
+			<< "Cubes: " << sCube << "(Zero: " << sCube - sN << "(" << (float)(sCube - sN) / (float)sCube * 100.0f << "%), N: "
 			<< sN << "(" << (float)sN / (float)sCube * 100.0f << "%))";
 		std::cout << "\n£g = " << std::fixed << setprecision(3) << sAverage << ", £m = " << sStandard;
 		std::cout << "\nnCompleted = " << std::fixed << setprecision(1) << nCompleted * precision << endl;
@@ -178,7 +177,7 @@ float Cylinder::statistics(bool print)
 		}
 		opt << "\n, Sum, " << sPts << ", " << (float)sPts / cloud_size * 100.0f << "%, "
 			<< sPts / (r * (2.0f + EIGEN_PI) * seg * 10000.0f) << "pts/cm^2, \n"
-			<< ", Cubes, " << sCube << ", Zero, " << sCube - sN << ", " << (float)(sCube - sN) / sCube * 100.0f << "%, N, " 
+			<< ", Cubes, " << sCube << ", Zero, " << sCube - sN << ", " << (float)(sCube - sN) / sCube * 100.0f << "%, N, "
 			<< sN << ", " << (float)sN / sCube * 100.0f << "%, \n"
 			<< ", £g, " << sAverage << ", £m, " << sStandard << ", \n"
 			<< ", nCompleted, " << nCompleted * precision << ", \n";
@@ -287,9 +286,9 @@ float Arch::statistics(bool print)
 	unsigned cloud_size = cloud.size();
 	if (print)
 	{
-		std::cout << "------------------------------------------------------------------------------\n" 
+		std::cout << "------------------------------------------------------------------------------\n"
 			<< "Number of points = " << cloud_size << endl;
-		std::cout << "Number of cubes = " << cube_x << " * " << cube_y << " * " << cube_z << " = " << nCube 
+		std::cout << "Number of cubes = " << cube_x << " * " << cube_y << " * " << cube_z << " = " << nCube
 			<< "\nSegmentation: " << std::fixed << setprecision(2) << seg - start << "m, precision: " << precision << "m\n";
 	}
 
@@ -410,17 +409,17 @@ float Arch::statistics(bool print)
 		std::cout << "------------------------------------------------------------------------------\nStatistics\n";
 		std::cout << "\nSum: " << sPts << "(" << std::fixed << setprecision(2) << (float)sPts / cloud_size * 100.0f
 			<< "%), " << sPts / (r * (2 + EIGEN_PI) * seg * 10000.0) << "pts/cm^2\n"
-			<< "Cubes: " << sCube << "(Zero: " << sCube - sN << "(" << (float)(sCube - sN) / sCube * 100.0f << "%), N: " 
+			<< "Cubes: " << sCube << "(Zero: " << sCube - sN << "(" << (float)(sCube - sN) / sCube * 100.0f << "%), N: "
 			<< sN << "(" << (float)sN / sCube * 100.0f << "%))";
 		std::cout << "\n£g = " << std::fixed << setprecision(3) << sAverage << ", £m = " << sStandard;
 		std::cout << "\nnCompleted = " << std::fixed << setprecision(1) << nCompleted * precision << endl;
-		for (auto i = segCompleted.cbegin(); i < segCompleted.cend(); i++)
+		for (auto i = segCompleted.begin(); i < segCompleted.end();)
 		{
-			cout << *i * precision << " ";
-			if (*(i + 1) - *i != 1)cout << endl;
-			//i = check_continue(i);
+			auto it = check_continue(i);
+			std::cout << setw(4) << *i * precision << " - " << setw(4) << *it * precision << "\n";
+			i = it + 1;
 		}
-		std::cout << "\n------------------------------------------------------------------------------\n\n";
+		std::cout << "------------------------------------------------------------------------------\n\n";
 
 		std::string path = "";
 		std::string filename = path + "l=" + std::to_string((unsigned)l * 2) + "_" /*+ location*/ + ".csv";
@@ -431,7 +430,7 @@ float Arch::statistics(bool print)
 		}
 		opt << "\n, Sum, " << sPts << ", " << (float)sPts / cloud_size * 100.0f << "%, "
 			<< sPts / (r * (2 + EIGEN_PI) * seg * 10000.0) << "pts/cm^2, \n"
-			<< ", Cubes, " << sCube << ", Zero, " << sCube - sN << ", " << (float)(sCube - sN) / sCube * 100.0f << "%, N, " 
+			<< ", Cubes, " << sCube << ", Zero, " << sCube - sN << ", " << (float)(sCube - sN) / sCube * 100.0f << "%, N, "
 			<< sN << ", " << (float)sN / sCube * 100.0f << "%, \n"
 			<< ", £g, " << sAverage << ", £m, " << sStandard << ", \n"
 			<< ", nCompleted, " << nCompleted * precision << ", \n";
