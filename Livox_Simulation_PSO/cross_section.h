@@ -20,13 +20,15 @@
 #include <pcl/point_types.h>
 #include <pcl/point_cloud.h>
 #include <pcl/filters/passthrough.h>
+#include <pcl/filters/voxel_grid.h>
 #include <pcl/visualization/pcl_visualizer.h>
 
 #include <omp.h>
 
-extern int THREADS;
+extern unsigned THREADS;
 extern char flag_cross_section;
-extern pcl::PointCloud<pcl::PointXYZ> cloud;
+extern pcl::PointCloud<pcl::PointXYZL> cloud;
+extern pcl::PointCloud<pcl::PointXYZL> cloud_cube;
 
 
 enum cross_section
@@ -39,39 +41,51 @@ class Cross_Section
 {
 public:
 	Cross_Section();
-	~Cross_Section() {}
-	static float d_to_r(float degree);
+	~Cross_Section() { delete cube; }
+	static std::vector<unsigned>::const_iterator check_continue(std::vector<unsigned>::const_iterator i);
 
 protected:
-	constexpr static float eps = 1e-5;
+	constexpr static float eps = 1e-5f;
+	constexpr static float seg = 100.0;
+	constexpr static float start = 0.0;
+	constexpr static float end = start + seg;
+	constexpr static float precision = 0.1f;
+	constexpr static float scale = 1.0f / precision;
 
+	static unsigned cube_x;
+	static unsigned cube_y;
+	static unsigned cube_z;
+	static unsigned nCube;
+	static unsigned* cube;
 };
 
-class Cylinder : virtual public Cross_Section
+class Cylinder : public Cross_Section
 {
 public:
 	Cylinder();
 	~Cylinder() {}
-	void cylinder(Eigen::Vector3d*& v, unsigned length);
-private:
+	static void cylinder(Eigen::Vector3d*& v, unsigned length);
+	static float statistics(bool print);
+protected:
 	constexpr static float r = 5.0f;
+	constexpr static float h = 0.0f;
 };
 
-class Arch : virtual public Cross_Section
+class Arch : public Cross_Section
 {
 public:
 	Arch();
 	~Arch() {}
-	void arch(Eigen::Vector3d*& v, unsigned length);
-private:
+	static void arch(Eigen::Vector3d*& v, unsigned length);
+	static float statistics(bool print);
+protected:
 	constexpr static float alpha = 45.0f / 180.0f * EIGEN_PI;
 	constexpr static float l = 6.0f;
 	constexpr static float r = 3.0f / 5.0f * l;
-	float a;
-	float b;
-	float R;
-	float ix;
-	float iy;
-	float f;
-
+	static float a;
+	static float b;
+	static float R;
+	static float ix;
+	static float iy;
+	static float f;
 };

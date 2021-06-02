@@ -2,89 +2,54 @@
 
 #include "cross_section.h"
 
-extern int nMid70;
-extern int nHorizon;
+extern unsigned nMid70;
+extern unsigned nHorizon;
+extern unsigned nSensor;
+constexpr auto SCANNING_TIME = 30U;
 
-class Livox :public Cylinder, public Arch
+class Livox/* :public Cylinder, public Arch*/
 {
 public:
 	Livox();
 	Livox(float tx, float ty, float tz, float rx, float ry);
-	Livox(float tx, float ty, float tz, float rx, float ry, float rz);
-	~Livox()
-	{
-		delete ray;
-		std::cout << "delete Livox\n";
-		//delete position;
-		//delete velocity;
-		//delete p_best_position;
-		//delete g_best_position;
-		//delete fitness;
-		//delete p_best_fitness;
-	}
+	~Livox() { delete ray; /* std::cout << "delete Livox\n"; */ }
 	void print()const;
+	unsigned get_nPts();
+	static float d_to_r(float degree);
+	static void visualiation(std::vector<Livox*>& Sensors);
 
-	//float get_scalar();
-	//float get_ox();
-	//float get_oy();
-	//float get_oz();
-	//float get_roll();
-	//float get_pitch();
-
-	//unsigned get_nPts();
-
-	//float get_dt();
-	//float get_w1();
-	//float get_w2();
-
-	//Eigen::Vector3d* get_ray();
 protected:
 	Eigen::Vector3d* ray;
-	pcl::PointCloud<pcl::PointXYZ> cloud;
 
-
-	float scalar;
+	constexpr static float scalar = 100.0f;
 	float ox;
 	float oy;
 	float oz;
 	float roll;
 	float pitch;
 
-	unsigned scanning_time;
-	unsigned nPtsPerSec;
 	unsigned nPts;
 
-	float dt;
-	float rpm1;
-	float rpm2;
-	float w1;
-	float w2;
+	constexpr static unsigned scanning_time = SCANNING_TIME;
+	constexpr static float rpm1 = 7294.0f;
+	constexpr static float w1 = rpm1 / 60.0f * 2.0f * EIGEN_PI;
 
-	//int particle;
-	//float iteration;
-	//float limit;
-	//float W;
-	//float C1;
-	//float C2;
-
-	//int para_length;
-	//float* position;
-	//float* velocity;
-	//float* p_best_position;
-	//float* g_best_position;
-	//float* fitness;
-	//float* p_best_fitness;
-	//float g_best_fitness;
 };
 
 class Mid : public Livox
 {
 public:
 	Mid();
-	Mid(float tx, float ty, float tz, float rx, float ry);
-	~Mid() { std::cout << "delete Mid\n"; }
+	Mid(float tx, float ty, float tz, float rx, float ry, float fov);
+	~Mid() { /*std::cout << "delete Mid\n";*/ }
 protected:
 	float FoV;
+
+	static unsigned nPtsPerSec;
+
+	static float dt;
+	static float rpm2;
+	static float w2;
 };
 
 class Mid70 : public Mid
@@ -92,7 +57,17 @@ class Mid70 : public Mid
 public:
 	Mid70();
 	Mid70(float tx, float ty, float tz, float rx, float ry);
-	~Mid70() { std::cout << "delete Mid70\n"; }
+	Mid70(std::vector<float>::iterator b);
+	~Mid70() { /*std::cout << "delete Mid70 and ray\n";*/ }
+};
+
+class Mid40 : public Mid
+{
+public:
+	Mid40();
+	Mid40(float tx, float ty, float tz, float rx, float ry);
+	Mid40(std::vector<float>::iterator b);
+	~Mid40() { /*std::cout << "delete Mid40 and ray\n";*/ }
 };
 
 class Horizon : public Livox
@@ -100,25 +75,28 @@ class Horizon : public Livox
 public:
 	Horizon();
 	Horizon(float tx, float ty, float tz, float rx, float ry, float rz);
-	~Horizon() { std::cout << "delete Horizon\n"; }
-	//void set_FoV(float h, float v);
-	//float get_FoV_h();
-	//float get_FoV_v();
+	Horizon(std::vector<float>::iterator b);
+	~Horizon() { /*std::cout << "delete Horizon and ray\n";*/ }
 
 protected:
-	float FoV_h;
-	float FoV_v;
-
 	float yaw;
 
-	float rpm3;
-	float w3;
-	float n1;
-	float n2;
-	float alpha1;
-	float alpha2;
-	float delta1;
-	float delta2;
-	float rotation_ratio;
-	float translation_ratio;
+	static float FoV_h;
+	static float FoV_v;
+
+	static unsigned nPtsPerSec;
+
+	static float dt;
+	static float rpm2;
+	static float w2;
+	static float rpm3;
+	static float w3;
+	static float n1;
+	static float n2;
+	static float alpha1;
+	static float alpha2;
+	static float delta1;
+	static float delta2;
+	static float rotation_ratio;
+	static float translation_ratio;
 };
