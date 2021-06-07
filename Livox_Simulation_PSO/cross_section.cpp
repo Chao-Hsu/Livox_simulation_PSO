@@ -60,6 +60,7 @@ void Cylinder::cylinder(Eigen::Vector3d*& v, unsigned length) {
 
 float Cylinder::statistics(bool print)
 {
+	cloud_cube.clear();
 	cloud_cube.reserve((cube_x + cube_y) * 2 * cube_z);
 	Cross_Section::cube_x = (unsigned)(r * 2.0f * scale) + 1U;
 	Cross_Section::cube_y = (unsigned)((r + h) * scale) + 1U;
@@ -161,10 +162,11 @@ float Cylinder::statistics(bool print)
 			<< sN << "(" << (float)sN / (float)sCube * 100.0f << "%))";
 		std::cout << "\n£g = " << std::fixed << setprecision(3) << sAverage << ", £m = " << sStandard;
 		std::cout << "\nnCompleted = " << std::fixed << setprecision(1) << nCompleted * precision << endl;
-		for (auto i = segCompleted.cbegin(); i < segCompleted.cend(); i++)
+		for (auto i = segCompleted.begin(); i < segCompleted.end();)
 		{
-			cout << *i * precision << " ";
-			if (*(i + 1) - *i != 1)cout << endl;
+			auto it = check_continue(i);
+			std::cout << setw(4) << *i * precision << " - " << setw(4) << *it * precision << "\n";
+			i = it + 1;
 		}
 		std::cout << "\n------------------------------------------------------------------------------\n\n";
 
@@ -184,6 +186,7 @@ float Cylinder::statistics(bool print)
 		opt.close();
 	}
 
+	delete cube;
 	return (float)nCompleted * precision;
 }
 
@@ -276,6 +279,7 @@ void Arch::arch(Eigen::Vector3d*& v, unsigned length) {
 
 float Arch::statistics(bool print)
 {
+	cloud_cube.clear();
 	cloud_cube.reserve((cube_x + cube_y) * 2 * cube_z);
 	Cross_Section::cube_x = (unsigned)(l * 2.0f * scale) + 1U;
 	Cross_Section::cube_y = (unsigned)(f * scale) + 1U;
@@ -438,6 +442,6 @@ float Arch::statistics(bool print)
 
 
 	}
-
+	delete cube;
 	return (float)nCompleted * precision;
 }

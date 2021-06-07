@@ -12,7 +12,7 @@ class Livox/* :public Cylinder, public Arch*/
 public:
 	Livox();
 	Livox(float tx, float ty, float tz, float rx, float ry);
-	~Livox() { delete ray; /* std::cout << "delete Livox\n"; */ }
+	~Livox() { delete ray;  /*std::cout << "delete Livox\n";*/ }
 	void print()const;
 	unsigned get_nPts();
 	static float d_to_r(float degree);
@@ -58,6 +58,7 @@ public:
 	Mid70();
 	Mid70(float tx, float ty, float tz, float rx, float ry);
 	Mid70(std::vector<float>::iterator b);
+	Mid70(float* ptr);
 	~Mid70() { /*std::cout << "delete Mid70 and ray\n";*/ }
 };
 
@@ -76,6 +77,7 @@ public:
 	Horizon();
 	Horizon(float tx, float ty, float tz, float rx, float ry, float rz);
 	Horizon(std::vector<float>::iterator b);
+	Horizon(float* ptr);
 	~Horizon() { /*std::cout << "delete Horizon and ray\n";*/ }
 
 protected:

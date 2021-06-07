@@ -106,7 +106,6 @@ Mid::Mid(float tx, float ty, float tz, float rx, float ry, float fov) : Livox(tx
 	nPts = scanning_time * nPtsPerSec;
 	ray = new Eigen::Vector3d[nPts + 1U];
 
-	++nMid70;
 	FoV = fov;
 
 	Eigen::Vector3d O(ox, oy, oz);
@@ -159,6 +158,9 @@ Mid70::Mid70(float tx, float ty, float tz, float rx, float ry) : Mid(tx, ty, tz,
 Mid70::Mid70(std::vector<float>::iterator b) : Mid(*b, *(b + 1), *(b + 2), *(b + 3), *(b + 4), 70.4f)
 {
 }
+Mid70::Mid70(float* ptr) : Mid(*ptr, *(ptr + 1), *(ptr + 2), *(ptr + 3), *(ptr + 4), 70.4f)
+{
+}
 
 Mid40::Mid40() : Mid() {}
 Mid40::Mid40(float tx, float ty, float tz, float rx, float ry) : Mid(tx, ty, tz, rx, ry, 38.4f)
@@ -205,8 +207,6 @@ Horizon::Horizon(float tx, float ty, float tz, float rx, float ry, float rz) : L
 {
 	Horizon::nPts = scanning_time * Horizon::nPtsPerSec;
 	ray = new Eigen::Vector3d[nPts * 6U + 1U];
-
-	++nHorizon;
 
 	yaw = rz;
 
@@ -276,9 +276,75 @@ Horizon::Horizon(std::vector<float>::iterator b) : Livox(*b, *(b + 1), *(b + 2),
 	Horizon::nPts = scanning_time * Horizon::nPtsPerSec;
 	ray = new Eigen::Vector3d[nPts * 6U + 1U];
 
-	++nHorizon;
-
 	yaw = *(b + 5);
+
+	Eigen::Vector3d O(ox, oy, oz);
+	ray[0] = O;
+	float transX = scalar * 1.0f / 0.516093285f * tan(d_to_r(FoV_h / 2.0f));
+	float transY = scalar * 1.0f / 0.134329364f * tan(d_to_r(FoV_v / 2.0f));
+
+	//generate vectors
+	float A21 = sin(alpha1) * sin(alpha1) + cos(alpha1) * sqrt(n1 * n1 - sin(alpha1) * sin(alpha1));
+	float A2 = cos(alpha2) * std::sqrt(n2 * n2 - n1 * n1 + A21 * A21);
+#pragma omp parallel for num_threads(THREADS) schedule(dynamic, nPts/THREADS)
+	for (unsigned n = 1; n <= nPts; n++)
+	{
+		float a1 = n * dt * w1, a2 = n * dt * w2, a3 = n * dt * w3;
+		float A3 = sin(alpha1) * sin(alpha2) * (cos(alpha1) - sqrt(n1 * n1 - sin(alpha1) * sin(alpha1))) * cos(a1 - a2);
+		float A1 = sqrt(1.0f - n2 * n2 + (A2 + A3) * (A2 + A3));
+		float A = A1 - A2 - A3;
+		float K = sin(alpha1) * (cos(alpha1) - sqrt(n1 * n1 - sin(alpha1) * sin(alpha1))) * cos(a1) + A * sin(alpha2) * cos(a2);
+		float L = sin(alpha1) * (cos(alpha1) - sqrt(n1 * n1 - sin(alpha1) * sin(alpha1))) * sin(a1) + A * sin(alpha2) * sin(a2);
+		float M = -sqrt(n2 * n2 - n1 * n1 + A21 * A21) - A * cos(alpha2);
+		float X = K / M + cos(a3) * rotation_ratio, Y = L / M + sin(a3) * rotation_ratio;
+
+		X *= transX;
+		for (unsigned j = 0; j < 6; j++)
+		{
+			auto tmp_Y = (Y + translation_ratio * j - 0.023739453f) * transY;
+			Eigen::Vector3d tmp_v(X, tmp_Y, scalar);
+			ray[n + nPts * j] = tmp_v;
+		}
+	}
+	nPts *= 6;
+
+	//rotation
+	Eigen::AngleAxisd X(d_to_r(-roll), Eigen::Vector3d::UnitX());
+	Eigen::AngleAxisd Y(d_to_r(-pitch), Eigen::Vector3d::UnitY());
+	Eigen::AngleAxisd Z(d_to_r(-yaw), Eigen::Vector3d::UnitZ());
+#pragma omp parallel for num_threads(THREADS) schedule(dynamic, nPts/THREADS)
+	for (unsigned n = 1; n <= nPts; n++)
+	{
+		ray[n] = Z.toRotationMatrix() * Y.toRotationMatrix() * X.toRotationMatrix() * ray[n];
+	}
+
+	//translation
+#pragma omp parallel for num_threads(THREADS) schedule(dynamic, nPts/THREADS)
+	for (unsigned n = 1; n <= nPts; n++)
+	{
+		ray[n] += O;
+	}
+
+
+	//intersection
+	switch (flag_cross_section)
+	{
+	case choose_cylinder:
+		Cylinder::cylinder(ray, nPts + 1U);
+		break;
+	case choose_arch:
+		Arch::arch(ray, nPts + 1U);
+		break;
+	default:
+		break;
+	}
+}
+Horizon::Horizon(float* ptr) : Livox(*ptr, *(ptr + 1), *(ptr + 2), *(ptr + 3), *(ptr + 4))
+{
+	Horizon::nPts = scanning_time * Horizon::nPtsPerSec;
+	ray = new Eigen::Vector3d[nPts * 6U + 1U];
+
+	yaw = *(ptr + 5);
 
 	Eigen::Vector3d O(ox, oy, oz);
 	ray[0] = O;

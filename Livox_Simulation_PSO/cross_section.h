@@ -1,4 +1,7 @@
 #pragma once
+#define _CRTDBG_MAP_ALLOC
+#include <stdlib.h>
+#include <crtdbg.h>
 
 #include <iostream>
 #include <iomanip>
@@ -46,7 +49,7 @@ public:
 
 protected:
 	constexpr static float eps = 1e-5f;
-	constexpr static float seg = 100.0;
+	constexpr static float seg = 50.0;
 	constexpr static float start = 0.0;
 	constexpr static float end = start + seg;
 	constexpr static float precision = 0.1f;
@@ -65,9 +68,9 @@ public:
 	Cylinder();
 	~Cylinder() {}
 	static void cylinder(Eigen::Vector3d*& v, unsigned length);
-	static float statistics(bool print);
-protected:
+	static float statistics(bool print = false);
 	constexpr static float r = 5.0f;
+protected:
 	constexpr static float h = 0.0f;
 };
 
@@ -77,10 +80,10 @@ public:
 	Arch();
 	~Arch() {}
 	static void arch(Eigen::Vector3d*& v, unsigned length);
-	static float statistics(bool print);
+	static float statistics(bool print = false);
+	constexpr static float l = 6.0f;
 protected:
 	constexpr static float alpha = 45.0f / 180.0f * EIGEN_PI;
-	constexpr static float l = 6.0f;
 	constexpr static float r = 3.0f / 5.0f * l;
 	static float a;
 	static float b;

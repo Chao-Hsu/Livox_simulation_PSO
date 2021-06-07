@@ -2,6 +2,7 @@
 
 #include "Livox.h"
 
+extern std::random_device rd;
 extern std::mt19937_64 generator;
 
 class PSO
@@ -18,16 +19,21 @@ public:
 		delete p_best_fitness;
 	}
 	void go();
+	void init();
+	void set_p_max(float* p);
+	void set_p_min(float* p);
+private:
 	void move();
 	void compute_f();
+	void update();
 	float random(float lower, float upper);
-private:
+
 	float p_max[6];
 	float p_min[6];
 	float v_max[6];
 
 	unsigned particle;
-	float iteration;
+	unsigned iteration;
 	float limit;
 	float W;
 	float C1;
