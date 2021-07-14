@@ -69,7 +69,7 @@ public:
 	~Cylinder() {}
 	static void cylinder(Eigen::Vector3d*& v, unsigned length);
 	static float statistics(bool print = false);
-	constexpr static float r = 5.0f;
+	constexpr static float r = 6.0f;
 protected:
 	constexpr static float h = 0.0f;
 };

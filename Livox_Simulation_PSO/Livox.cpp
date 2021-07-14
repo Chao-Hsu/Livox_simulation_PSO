@@ -41,7 +41,7 @@ void Livox::print()const
 }
 unsigned Livox::get_nPts() { return nPts; }
 float Livox::d_to_r(float degree) { return degree / 180.0f * EIGEN_PI; }
-void Livox::visualiation(std::vector<Livox*>& Sensors)
+void Livox::visualiation(std::vector<Livox>& Sensors)
 {
 	pcl::visualization::PCLVisualizer viewer("cloud");
 	viewer.setBackgroundColor(0, 0, 0);
@@ -50,11 +50,11 @@ void Livox::visualiation(std::vector<Livox*>& Sensors)
 	unsigned countPts = 0;
 	for (size_t i = 0; i < Sensors.size(); i++)
 	{
-		for (size_t j = 0; j < Sensors[i]->get_nPts(); j++)
+		for (size_t j = 0; j < Sensors[i].get_nPts(); j++)
 		{
 			clouds[i].emplace_back(cloud.points[j + countPts]);
 		}
-		countPts += Sensors[i]->get_nPts();
+		countPts += Sensors[i].get_nPts();
 	}
 
 	std::unique_ptr<pcl::PointCloud<pcl::PointXYZL>::Ptr[]> clouds_ptr(new pcl::PointCloud<pcl::PointXYZL>::Ptr[Sensors.size()]);
@@ -99,7 +99,7 @@ void Livox::visualiation(std::vector<Livox*>& Sensors)
 Mid::Mid() :Livox() { FoV = 0.0f; }
 unsigned Mid::nPtsPerSec = 100000;
 float Mid::dt = 1.0f / Mid::nPtsPerSec;
-float Mid::rpm2 = 4664.0f;
+float Mid::rpm2 = -4664.0f;
 float Mid::w2 = Mid::rpm2 / 60.0f * 2.0f * EIGEN_PI;
 Mid::Mid(float tx, float ty, float tz, float rx, float ry, float fov) : Livox(tx, ty, tz, rx, ry)
 {

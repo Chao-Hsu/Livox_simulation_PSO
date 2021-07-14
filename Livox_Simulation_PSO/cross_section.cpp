@@ -170,23 +170,18 @@ float Cylinder::statistics(bool print)
 		}
 		std::cout << "\n------------------------------------------------------------------------------\n\n";
 
-		std::string path = "";
-		std::string filename = path + "l=" + std::to_string((unsigned)r) + "_" /*+ location*/ + ".csv";
-		fstream opt(filename, std::ofstream::out | std::ofstream::app);
-		if (!opt)
-		{
-			cout << "file failed" << endl;
-		}
+		std::fstream opt("diff_amount.csv", std::ios::app | std::ios::out);
+		if (!opt.good())std::cerr << "file failed!\n";
 		opt << "\n, Sum, " << sPts << ", " << (float)sPts / cloud_size * 100.0f << "%, "
 			<< sPts / (r * (2.0f + EIGEN_PI) * seg * 10000.0f) << "pts/cm^2, \n"
 			<< ", Cubes, " << sCube << ", Zero, " << sCube - sN << ", " << (float)(sCube - sN) / sCube * 100.0f << "%, N, "
 			<< sN << ", " << (float)sN / sCube * 100.0f << "%, \n"
 			<< ", £g, " << sAverage << ", £m, " << sStandard << ", \n"
-			<< ", nCompleted, " << nCompleted * precision << ", \n";
+			<< ", nCompleted, " << nCompleted * precision << *segCompleted.cbegin() * precision << ", \n";
 		opt.close();
 	}
 
-	delete cube;
+	delete[] cube;
 	return (float)nCompleted * precision;
 }
 
@@ -425,23 +420,18 @@ float Arch::statistics(bool print)
 		}
 		std::cout << "------------------------------------------------------------------------------\n\n";
 
-		std::string path = "";
-		std::string filename = path + "l=" + std::to_string((unsigned)l * 2) + "_" /*+ location*/ + ".csv";
-		fstream opt(filename, std::ofstream::out | std::ofstream::app);
-		if (!opt)
-		{
-			cout << "file failed" << endl;
-		}
+		std::fstream opt("diff_amount.csv", std::ios::app | std::ios::out);
+		if (!opt.good())std::cerr << "file failed!\n";
 		opt << "\n, Sum, " << sPts << ", " << (float)sPts / cloud_size * 100.0f << "%, "
 			<< sPts / (r * (2 + EIGEN_PI) * seg * 10000.0) << "pts/cm^2, \n"
 			<< ", Cubes, " << sCube << ", Zero, " << sCube - sN << ", " << (float)(sCube - sN) / sCube * 100.0f << "%, N, "
 			<< sN << ", " << (float)sN / sCube * 100.0f << "%, \n"
 			<< ", £g, " << sAverage << ", £m, " << sStandard << ", \n"
-			<< ", nCompleted, " << nCompleted * precision << ", \n";
+			<< ", nCompleted, " << nCompleted * precision << *segCompleted.cbegin() * precision << ", \n";
 		opt.close();
 
 
 	}
-	delete cube;
+	delete[] cube;
 	return (float)nCompleted * precision;
 }

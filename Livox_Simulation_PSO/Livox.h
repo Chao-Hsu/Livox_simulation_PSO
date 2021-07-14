@@ -16,7 +16,7 @@ public:
 	void print()const;
 	unsigned get_nPts();
 	static float d_to_r(float degree);
-	static void visualiation(std::vector<Livox*>& Sensors);
+	static void visualiation(std::vector<Livox>& Sensors);
 
 protected:
 	Eigen::Vector3d* ray;
@@ -80,7 +80,7 @@ public:
 	Horizon(float* ptr);
 	~Horizon() { /*std::cout << "delete Horizon and ray\n";*/ }
 
-protected:
+private:
 	float yaw;
 
 	static float FoV_h;

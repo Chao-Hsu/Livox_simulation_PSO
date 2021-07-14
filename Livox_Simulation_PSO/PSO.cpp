@@ -103,7 +103,8 @@ void PSO::go()
 
 		update();
 
-		std::cout << g_best_fitness << "\n";
+		std::cout << std::setfill('0') << std::setw(3) << i
+				  << std::setfill(' ') << std::setw(5) << g_best_fitness << "\n";
 		for (size_t i = 0; i < para_length; i++)
 		{
 			std::cout << g_best_position[i] << ", ";
@@ -112,24 +113,37 @@ void PSO::go()
 	}
 
 	cloud.clear();
-	Mid70 best00(g_best_position);
-	Mid70 best01(g_best_position + 5);
-	Horizon best02(g_best_position + 10);
-	Horizon best03(g_best_position + 16);
-	std::vector<Livox*> BEST{ &best00,&best01,&best02,&best03 };
+	for (unsigned mid70 = 0; mid70 < nMid70; mid70++)
+	{
+		Mid70 best00(g_best_position + 5U * mid70);
+	}
+	for (unsigned horizon = 0; horizon < nHorizon; horizon++)
+	{
+		Horizon best02(g_best_position + 5U * nMid70 + 6U * horizon);
+	}
+
+	/*std::fstream opt("diff_amount.csv", std::ios::app | std::ios::out);
+	if (!opt.good())std::cerr << "file failed!\n";
+	opt  << nMid70 << ", " << nHorizon << ", \n";
+	opt << g_best_fitness << ", ";
+	for (size_t i = 0; i < para_length; i++)
+	{
+		opt << g_best_position[i] << ", ";
+	}
+	opt << "\n";
+	opt.close();*/
 
 	switch (flag_cross_section)
 	{
 	case choose_arch:
-		Arch::statistics();
+		Arch::statistics(true);
 		break;
 	case choose_cylinder:
-		Cylinder::statistics();
+		Cylinder::statistics(true);
 		break;
 	default:
 		break;
 	}
-	//Livox::visualiation(BEST);
 }
 
 void PSO::move()
@@ -203,6 +217,7 @@ void PSO::compute_f()
 {
 	for (unsigned i = 0; i < particle; i++)
 	{
+		cloud.clear();
 		for (unsigned mid = 0; mid < nMid70; mid++)
 		{
 			Mid70 tmp(position + i * 5U + mid * particle * 5U);
@@ -222,7 +237,6 @@ void PSO::compute_f()
 		default:
 			break;
 		}
-		cloud.clear();
 	}
 }
 
