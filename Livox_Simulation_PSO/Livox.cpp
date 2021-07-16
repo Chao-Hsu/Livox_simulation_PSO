@@ -44,7 +44,7 @@ float Livox::d_to_r(float degree) { return degree / 180.0f * EIGEN_PI; }
 void Livox::visualiation(std::vector<Livox>& Sensors)
 {
 	pcl::visualization::PCLVisualizer viewer("cloud");
-	viewer.setBackgroundColor(0, 0, 0);
+	viewer.setBackgroundColor(1, 1, 1);
 
 	std::unique_ptr<pcl::PointCloud<pcl::PointXYZL>[]> clouds(new pcl::PointCloud<pcl::PointXYZL>[Sensors.size()]);
 	unsigned countPts = 0;
@@ -104,7 +104,9 @@ float Mid::w2 = Mid::rpm2 / 60.0f * 2.0f * EIGEN_PI;
 Mid::Mid(float tx, float ty, float tz, float rx, float ry, float fov) : Livox(tx, ty, tz, rx, ry)
 {
 	nPts = scanning_time * nPtsPerSec;
-	ray = new Eigen::Vector3d[nPts + 1U];
+	std::vector<Eigen::Vector3d> ray;
+	ray.reserve(nPts + 1U);
+	//ray = new Eigen::Vector3d[nPts + 1U];
 
 	FoV = fov;
 
@@ -206,7 +208,9 @@ float Horizon::FoV_v = 25.1f;
 Horizon::Horizon(float tx, float ty, float tz, float rx, float ry, float rz) : Livox(tx, ty, tz, rx, ry)
 {
 	Horizon::nPts = scanning_time * Horizon::nPtsPerSec;
-	ray = new Eigen::Vector3d[nPts * 6U + 1U];
+	std::vector<Eigen::Vector3d> ray;
+	ray.reserve(nPts * 6U + 1U);
+	//ray = new Eigen::Vector3d[nPts * 6U + 1U];
 
 	yaw = rz;
 
@@ -274,7 +278,9 @@ Horizon::Horizon(float tx, float ty, float tz, float rx, float ry, float rz) : L
 Horizon::Horizon(std::vector<float>::iterator b) : Livox(*b, *(b + 1), *(b + 2), *(b + 3), *(b + 4))
 {
 	Horizon::nPts = scanning_time * Horizon::nPtsPerSec;
-	ray = new Eigen::Vector3d[nPts * 6U + 1U];
+	std::vector<Eigen::Vector3d> ray;
+	ray.reserve(nPts * 6U + 1U);
+	//ray = new Eigen::Vector3d[nPts * 6U + 1U];
 
 	yaw = *(b + 5);
 
@@ -342,7 +348,9 @@ Horizon::Horizon(std::vector<float>::iterator b) : Livox(*b, *(b + 1), *(b + 2),
 Horizon::Horizon(float* ptr) : Livox(*ptr, *(ptr + 1), *(ptr + 2), *(ptr + 3), *(ptr + 4))
 {
 	Horizon::nPts = scanning_time * Horizon::nPtsPerSec;
-	ray = new Eigen::Vector3d[nPts * 6U + 1U];
+	std::vector<Eigen::Vector3d> ray;
+	ray.reserve(nPts * 6U + 1U);
+	//ray = new Eigen::Vector3d[nPts * 6U + 1U];
 
 	yaw = *(ptr + 5);
 

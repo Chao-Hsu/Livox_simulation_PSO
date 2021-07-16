@@ -67,7 +67,8 @@ class Cylinder : public Cross_Section
 public:
 	Cylinder();
 	~Cylinder() {}
-	static void cylinder(Eigen::Vector3d*& v, unsigned length);
+	//static void cylinder(Eigen::Vector3d*& v, unsigned length);
+	static void cylinder(std::vector<Eigen::Vector3d>& v, unsigned length);
 	static float statistics(bool print = false);
 	constexpr static float r = 6.0f;
 protected:
@@ -79,7 +80,8 @@ class Arch : public Cross_Section
 public:
 	Arch();
 	~Arch() {}
-	static void arch(Eigen::Vector3d*& v, unsigned length);
+	//static void arch(Eigen::Vector3d*& v, unsigned length);
+	static void arch(std::vector<Eigen::Vector3d>& v, unsigned length);
 	static float statistics(bool print = false);
 	constexpr static float l = 6.0f;
 protected:

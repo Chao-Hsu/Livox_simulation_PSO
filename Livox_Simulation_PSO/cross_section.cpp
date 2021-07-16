@@ -17,7 +17,8 @@ unsigned* Cross_Section::cube = nullptr;
 
 Cylinder::Cylinder() {}
 
-void Cylinder::cylinder(Eigen::Vector3d*& v, unsigned length) {
+//void Cylinder::cylinder(Eigen::Vector3d*& v, unsigned length) {
+void Cylinder::cylinder(std::vector<Eigen::Vector3d>& v, unsigned length) {
 	cloud.width = length - 1 + cloud.size();
 	cloud.height = 1;
 	cloud.reserve(cloud.width * cloud.height);
@@ -168,17 +169,17 @@ float Cylinder::statistics(bool print)
 			std::cout << setw(4) << *i * precision << " - " << setw(4) << *it * precision << "\n";
 			i = it + 1;
 		}
-		std::cout << "\n------------------------------------------------------------------------------\n\n";
+		std::cout << "------------------------------------------------------------------------------\n\n";
 
-		std::fstream opt("diff_amount.csv", std::ios::app | std::ios::out);
-		if (!opt.good())std::cerr << "file failed!\n";
-		opt << "\n, Sum, " << sPts << ", " << (float)sPts / cloud_size * 100.0f << "%, "
-			<< sPts / (r * (2.0f + EIGEN_PI) * seg * 10000.0f) << "pts/cm^2, \n"
-			<< ", Cubes, " << sCube << ", Zero, " << sCube - sN << ", " << (float)(sCube - sN) / sCube * 100.0f << "%, N, "
-			<< sN << ", " << (float)sN / sCube * 100.0f << "%, \n"
-			<< ", £g, " << sAverage << ", £m, " << sStandard << ", \n"
-			<< ", nCompleted, " << nCompleted * precision << *segCompleted.cbegin() * precision << ", \n";
-		opt.close();
+		//std::fstream opt("diff_amount.csv", std::ios::app | std::ios::out);
+		//if (!opt.good())std::cerr << "file failed!\n";
+		//opt << "\n, Sum, " << sPts << ", " << (float)sPts / cloud_size * 100.0f << "%, "
+		//	<< sPts / (r * (2.0f + EIGEN_PI) * seg * 10000.0f) << "pts/cm^2, \n"
+		//	<< ", Cubes, " << sCube << ", Zero, " << sCube - sN << ", " << (float)(sCube - sN) / sCube * 100.0f << "%, N, "
+		//	<< sN << ", " << (float)sN / sCube * 100.0f << "%, \n"
+		//	<< ", £g, " << sAverage << ", £m, " << sStandard << ", \n"
+		//	<< ", nCompleted, " << nCompleted * precision << *segCompleted.cbegin() * precision << ", \n";
+		//opt.close();
 	}
 
 	delete[] cube;
@@ -195,7 +196,7 @@ float Arch::ix = Arch::a + Arch::r * cos(Arch::alpha);
 float Arch::iy = Arch::r * sin(Arch::alpha);
 float Arch::f = Arch::R - Arch::b;
 
-void Arch::arch(Eigen::Vector3d*& v, unsigned length) {
+void Arch::arch(std::vector<Eigen::Vector3d>& v, unsigned length) {
 	cloud.width = length - 1 + cloud.size();
 	cloud.height = 1;
 	cloud.reserve(cloud.width * cloud.height);
@@ -420,15 +421,15 @@ float Arch::statistics(bool print)
 		}
 		std::cout << "------------------------------------------------------------------------------\n\n";
 
-		std::fstream opt("diff_amount.csv", std::ios::app | std::ios::out);
-		if (!opt.good())std::cerr << "file failed!\n";
-		opt << "\n, Sum, " << sPts << ", " << (float)sPts / cloud_size * 100.0f << "%, "
-			<< sPts / (r * (2 + EIGEN_PI) * seg * 10000.0) << "pts/cm^2, \n"
-			<< ", Cubes, " << sCube << ", Zero, " << sCube - sN << ", " << (float)(sCube - sN) / sCube * 100.0f << "%, N, "
-			<< sN << ", " << (float)sN / sCube * 100.0f << "%, \n"
-			<< ", £g, " << sAverage << ", £m, " << sStandard << ", \n"
-			<< ", nCompleted, " << nCompleted * precision << *segCompleted.cbegin() * precision << ", \n";
-		opt.close();
+		//std::fstream opt("diff_amount.csv", std::ios::app | std::ios::out);
+		//if (!opt.good())std::cerr << "file failed!\n";
+		//opt << "\n, Sum, " << sPts << ", " << (float)sPts / cloud_size * 100.0f << "%, "
+		//	<< sPts / (r * (2 + EIGEN_PI) * seg * 10000.0) << "pts/cm^2, \n"
+		//	<< ", Cubes, " << sCube << ", Zero, " << sCube - sN << ", " << (float)(sCube - sN) / sCube * 100.0f << "%, N, "
+		//	<< sN << ", " << (float)sN / sCube * 100.0f << "%, \n"
+		//	<< ", £g, " << sAverage << ", £m, " << sStandard << ", \n"
+		//	<< ", nCompleted, " << nCompleted * precision << *segCompleted.cbegin() * precision << ", \n";
+		//opt.close();
 
 
 	}
